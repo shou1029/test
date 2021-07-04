@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Dice</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<script>
+var mdice = [3];
+var edice = [3];
+var mmyaku, msyaku, msyakuall;
+var emyaku, esyaku, esyakuall;
+
+var mnoyaku = true;
+var enoyaku = true;
+
+var mmscore = 0;
+var emscore = 0;
+var msscore = 0;
+var esscore = 0;
+var mtscore = 0;
+var etscore = 0;
+
+function dice(){
+    mmyaku = "";
+    msyaku = "無し";
+    msyakuall = "無し";
+    emyaku = "";
+    esyaku = "無し";
+    esyakuall = "無し";
+    mnoyaku = true;
+    enoyaku = true;
+    mmscore = 0;
+    emscore = 0;
+    msscore = 0;
+    esscore = 0;
+    mtscore = 0;
+    etscore = 0;
+    for(var i = 0; i < 3; i++){
+        mdice[i] = Math.floor(Math.random() * 6) + 1;
+        edice[i] = Math.floor(Math.random() * 6) + 1;
+    }
+    role();
+    erole();
+    document.getElementById("Demetext").innerHTML = "プレイヤーの出目";
+    document.getElementById("Deme").innerHTML = mdice[0] + " " + mdice[1] + " " + mdice[2];
+    document.getElementById("Mainscoretext").innerHTML = "メイン役";
+    document.getElementById("Mainscore").innerHTML = mmyaku + " : " + mmscore;
+    document.getElementById("Subscoretext").innerHTML = "サブ役";
+    document.getElementById("Subscore").innerHTML = msyakuall + " : " + msscore;
+    document.getElementById("Totalscoretext").innerHTML = "合計得点";
+    document.getElementById("Totalscore").innerHTML = mtscore;
+
+    document.getElementById("eDemetext").innerHTML = "CPUの出目";
+    document.getElementById("eDeme").innerHTML = edice[0] + " " + edice[1] + " " + edice[2];
+    document.getElementById("eMainscoretext").innerHTML = "メイン役";
+    document.getElementById("eMainscore").innerHTML = emyaku + " : " + emscore;
+    document.getElementById("eSubscoretext").innerHTML = "サブ役";
+    document.getElementById("eSubscore").innerHTML = esyakuall + " : " + esscore;
+    document.getElementById("eTotalscoretext").innerHTML = "合計得点";
+    document.getElementById("eTotalscore").innerHTML = etscore;
+
+    if(mtscore > etscore){
+        document.getElementById("syohai").innerHTML = "プレイヤーの勝利！";
+    }else if(mtscore < etscore){
+        document.getElementById("syohai").innerHTML = "CPUの勝利！";
+    }else{
+        document.getElementById("syohai").innerHTML = "引き分け！";
+    }
+}
+
+function role(){
+    //メイン役
+    //トリプル
+    if(mdice[0] == mdice[1] && mdice[0] == mdice[2]){
+        mmscore = mdice[0] * 3;
+        mmyaku = "トリプル";
+    }
+    //ダブル
+    else if(mdice[0] == mdice[1] || mdice[0] == mdice[2]){
+        mmscore = mdice[0] * 2;
+        mmyaku = "ダブル";
+    }else if(mdice[1] == mdice[2]){
+        mmscore = mdice[1] * 2;
+        mmyaku = "ダブル";
+    //ゼロ
+    }else{
+        mmscore = mdice[0] + mdice[1] + mdice[2];
+        mmyaku = "ゼロ";
+    }
+    //サブ役
+    //リベンジ
+    if(mdice[0] == 1 || mdice[1] == 1 || mdice[2] == 1){
+        if(edice[0] == 6 || edice[1] == 6 || edice[2] == 6){
+            msscore += 7;
+            msyaku = "リベンジ";
+            if(mnoyaku == true){
+                msyakuall = "リベンジ";
+                mnoyaku = false;
+            }else{
+                msyakuall += "、 リベンジ";
+            }
+        }
+    }
+    //ストレート
+    if(mdice[0] == mdice[1] - 1 && mdice[0] == mdice[2] - 2){
+        msscore += 5;
+        msyaku = "ストレート";
+        if(mnoyaku == true){
+            msyakuall = "ストレート";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 ストレート";
+        }
+    }else if(mdice[0] == mdice[1] + 1 && mdice[0] == mdice[2] + 2){
+        msscore += 5;
+        msyaku += "ストレート";
+        if(mnoyaku == true){
+            msyakuall = "ストレート";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 ストレート";
+        }
+    }else if(mdice[1] == mdice[0] - 1 && mdice[1] == mdice[2] - 2){
+        msscore += 5;
+        msyaku = "ストレート";
+        if(mnoyaku == true){
+            msyakuall = "ストレート";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 ストレート";
+        }
+    }else if(mdice[1] == mdice[0] + 1 && mdice[1] == mdice[2] + 2){
+        msscore += 5;
+        msyaku += "ストレート";
+        if(mnoyaku == true){
+            msyakuall = "ストレート";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 ストレート";
+        }
+    }else if(mdice[0] == mdice[2] - 1 && mdice[0] == mdice[1] - 2){
+        msscore += 5;
+        msyaku = "ストレート";
+        if(mnoyaku == true){
+            msyakuall = "ストレート";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 ストレート";
+        }
+    }else if(mdice[0] == mdice[2] + 1 && mdice[0] == mdice[1] + 2){
+        msscore += 5;
+        msyaku += "ストレート";
+        if(mnoyaku == true){
+            msyakuall = "ストレート";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 ストレート";
+        }
+    }
+    if(mmscore <= 10 && mmyaku == "ダブル" || mmyaku == "トリプル"){
+        msscore += 5;
+        msyaku += "リトル";
+        if(mnoyaku == true){
+            msyakuall = "リトル";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 リトル";
+        }
+    }
+    if(mdice[0] % 2 == 0 && mdice[1] % 2 == 0 && mdice[2] % 2 == 0){
+        msscore += 3;
+        msyaku += "イーブン";
+        if(mnoyaku == true){
+            msyakuall = "イーブン";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 イーブン";
+        }
+    }else if(mdice[0] % 2 != 0 && mdice[1] % 2 != 0 && mdice[2] % 2 != 0){
+        msscore += 3;
+        msyaku += "オッド";
+        if(mnoyaku == true){
+            msyakuall = "オッド";
+            mnoyaku = false;
+        }else{
+            msyakuall += "、 オッド";
+        }
+    }
+    mtscore = mmscore + msscore;
+}
+function erole(){
+    //メイン役
+    //トリプル
+    if(edice[0] == edice[1] && edice[0] == edice[2]){
+        emscore = edice[0] * 3;
+        emyaku = "トリプル";
+    }
+    //ダブル
+    else if(edice[0] == edice[1] || edice[0] == edice[2]){
+        emscore = edice[0] * 2;
+        emyaku = "ダブル";
+    }else if(edice[1] == edice[2]){
+        emscore = edice[1] * 2;
+        emyaku = "ダブル";
+    //ゼロ
+    }else{
+        emscore = edice[0] + edice[1] + edice[2];
+        emyaku = "ゼロ";
+    }
+    //サブ役
+    //リベンジ
+    if(edice[0] == 1 || edice[1] == 1 || edice[2] == 1){
+        if(mdice[0] == 6 || mdice[1] == 6 || mdice[2] == 6){
+            esscore += 7;
+            esyaku = "リベンジ";
+            if(enoyaku == true){
+                esyakuall = "リベンジ";
+                enoyaku = false;
+            }else{
+                esyakuall += "、 リベンジ";
+            }
+        }
+    }
+    //ストレート
+    if(edice[0] == edice[1] - 1 && edice[0] == edice[2] - 2){
+        esscore += 5;
+        esyaku = "ストレート";
+        if(enoyaku == true){
+            esyakuall = "ストレート";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 ストレート";
+        }
+    }else if(edice[0] == edice[1] + 1 && edice[0] == edice[2] + 2){
+        esscore += 5;
+        esyaku += "ストレート";
+        if(enoyaku == true){
+            esyakuall = "ストレート";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 ストレート";
+        }
+    }else if(edice[1] == edice[0] - 1 && edice[1] == edice[2] - 2){
+        esscore += 5;
+        esyaku = "ストレート";
+        if(enoyaku == true){
+            esyakuall = "ストレート";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 ストレート";
+        }
+    }else if(edice[1] == edice[0] + 1 && edice[1] == edice[2] + 2){
+        esscore += 5;
+        esyaku += "ストレート";
+        if(enoyaku == true){
+            esyakuall = "ストレート";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 ストレート";
+        }
+    }else if(edice[0] == edice[2] - 1 && edice[0] == edice[1] - 2){
+        esscore += 5;
+        esyaku = "ストレート";
+        if(enoyaku == true){
+            esyakuall = "ストレート";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 ストレート";
+        }
+    }else if(edice[0] == edice[2] + 1 && edice[0] == edice[1] + 2){
+        esscore += 5;
+        esyaku += "ストレート";
+        if(enoyaku == true){
+            emsyakuall = "ストレート";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 ストレート";
+        }
+    }
+    if(emscore <= 10 && emyaku == "ダブル" || emyaku == "トリプル"){
+        esscore += 5;
+        esyaku += "リトル";
+        if(enoyaku == true){
+            esyakuall = "リトル";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 リトル";
+        }
+    }
+    if(edice[0] % 2 == 0 && edice[1] % 2 == 0 && edice[2] % 2 == 0){
+        esscore += 3;
+        esyaku += "イーブン";
+        if(enoyaku == true){
+            esyakuall = "イーブン";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 イーブン";
+        }
+    }else if(edice[0] % 2 != 0 && edice[1] % 2 != 0 && edice[2] % 2 != 0){
+        esscore += 3;
+        esyaku += "オッド";
+        if(enoyaku == true){
+            esyakuall = "オッド";
+            enoyaku = false;
+        }else{
+            esyakuall += "、 オッド";
+        }
+    }
+    etscore = emscore + esscore;
+}
+</script>
+<h1>
+    ロールダイス
+</h1>
+<header>
+    <h3>
+        ルール説明
+    </h3>
+</header>
+<div>
+    <p>
+        プレイヤーとCPUでサイコロの目の勝負をします。お互いサイコロを3つ振って強い役を作り、得点が大きい方が勝ちです。
+    </p>
+</div>
+<div>
+    <h3>
+        役一覧
+    </h3>
+    <h4>
+        メイン役
+    </h4>
+    <p>
+        ベースとなる役であり、メイン役同士で重複はしない
+    </p>
+    <h5>
+        ・ゼロ
+    </h5>
+    <p>
+        出目が全て違う場合、出目の合計を足したもの(6~15点)
+    </p>
+    <h5>
+        ・ダブル
+    </h5>
+    <p>
+        出目の2つが同じ場合、同じ出目の数を2倍にしたもの(1~12点)
+    </p>
+    <h5>
+        ・トリプル
+    </h5>
+    <p>
+        出目が全て同じ場合、同じ出目の数を3倍にしたもの(1~18点)
+    </p>
+    <br>
+    <h4>
+        サブ役
+    </h4>
+    <p>
+        メイン役の点数に加えて、条件を満たすと追加される得点
+    </p>
+    <h5>
+        ・リベンジ
+    </h5>
+    <p>
+        出目に1があり、相手の出目に6がある場合(+7点)
+    </p>
+    <h5>
+        ・ストレート
+    </h5>
+    <p>
+        出目が1、2、3のように一続きの連番の場合(+5点)
+    </p>
+    <h5>
+        ・リトル
+    </h5>
+    <p>
+        メイン役がダブル、トリプルで得点が10点以下の場合(+5点)
+    </p>
+    <h5>
+        ・イーブン
+    </h5>
+    <p>
+        出目が全て偶数の場合(+3点)
+    </p>
+    <h5>
+        ・オッド
+    </h5>
+    <p>
+        出目が全て奇数の場合(+3点)
+    </p>
+</div>
+<div>
+<br>
+<input id="dice" type="button" value="サイコロを振る" onclick="dice()">
+<br>
+<br>
+<span id = "Demetext"></span>
+<br>
+<span id = "Deme"></span>
+<br>
+<span id = "Mainscoretext"></span>
+<br>
+<span id = "Mainscore"></span>
+<br>
+<span id = "Subscoretext"></span>
+<br>
+<span id = "Subscore"></span>
+<br>
+<span id = "Totalscoretext"></span>
+<br>
+<span id = "Totalscore"></span>
+<br>
+<br>
+<span id = "eDemetext"></span>
+<br>
+<span id = "eDeme"></span>
+<br>
+<span id = "eMainscoretext"></span>
+<br>
+<span id = "eMainscore"></span>
+<br>
+<span id = "eSubscoretext"></span>
+<br>
+<span id = "eSubscore"></span>
+<br>
+<span id = "eTotalscoretext"></span>
+<br>
+<span id = "eTotalscore"></span>
+<br>
+<br>
+<span id = "syohai"></span>
+</div>
+</body>
+</html>
